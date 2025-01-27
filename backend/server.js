@@ -52,12 +52,12 @@ app.use('/api', routes); // Attach routes to '/api' endpoint
 app.use("/api/admin", adminRoutes); // All admin routes prefixed with /api/admin
 
 // Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'client/build')));
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    });
-}
+// if (process.env.NODE_ENV === 'production') {
+//     app.use(express.static(path.join(__dirname, 'client/build')));
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+//     });
+// }
 
 // Port Configuration
 const PORT = process.env.PORT || 8081;
