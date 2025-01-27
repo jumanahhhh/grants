@@ -27,6 +27,7 @@ router.get("/", (req,res)=>{
     res.send("hey! please work /api");
 })
 router.post('/register', async (req, res) => {
+    res.send("register!!")
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: hashedPassword });
@@ -36,6 +37,7 @@ router.post('/register', async (req, res) => {
 
 // Backend login route
 router.post('/login', async (req, res) => {
+    res.send("login!")
     try {        
         // Validate required fields
         if (!req.body.email || !req.body.password) {
