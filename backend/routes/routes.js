@@ -23,6 +23,9 @@ function isLoggedIn(req, res, next) {
     }
 }
 
+router.get("/", (req,res)=>{
+    res.send("hey");
+})
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
