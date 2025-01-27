@@ -11,12 +11,18 @@ const adminRoutes = require("./routes/admin"); // Path to admin.js
 const app = express();
 
 // CORS Configuration
+// app.use(cors({
+//     origin: process.env.NODE_ENV === 'production' 
+//         ? process.env.PRODUCTION_CLIENT_URL  // Add this to your production env
+//         : process.env.CORS_ORIGIN,
+//     credentials: true
+// }));    
+
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? process.env.PRODUCTION_CLIENT_URL  // Add this to your production env
-        : process.env.CORS_ORIGIN,
-    credentials: true
-}));    
+    origin: "https://grants-phi.vercel.app/",
+    credentials: true // If you use cookies or authentication
+}));
+
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
