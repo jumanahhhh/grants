@@ -18,10 +18,13 @@ const app = express();
 //     credentials: true
 // }));    
 
+const cors = require('cors');
+
 app.use(cors({
-    origin: "https://grants-phi.vercel.app/",
-    credentials: true // If you use cookies or authentication
+    origin: process.env.PRODUCTION_CLIENT_URL,
+    credentials: true,
 }));
+
 
 
 // Middleware
