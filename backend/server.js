@@ -21,8 +21,8 @@ const app = express();
 const cors = require('cors');
 
 app.use(cors({
-    origin: process.env.PRODUCTION_CLIENT_URL,
-    credentials: true,
+    origin: "https://grants-phi.vercel.app", // Replace with your frontend URL
+    credentials: true, // Allow cookies/sessions
 }));
 
 
