@@ -1,15 +1,16 @@
 const { MongoClient } = require('mongodb');
+const uri = process.env.MONGODB_URI; // Ensure this is set correctly in your .env file
 
 async function connectDB() {
   try {
-    const client = new MongoClient(process.env.MONGODB_URI);
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
-    console.log('Connected to MongoDB!');
+    console.log('MongoDB Connected!');
     return client;
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    throw error;
+  } catch (err) {
+    console.error('Database connection error:', err);
+    throw err; // Rethrow the error
   }
 }
 
-module.exports = { connectDB };
+module.exports = connectDB; // Exporting the function directly
