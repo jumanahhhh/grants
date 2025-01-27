@@ -10,7 +10,9 @@ const stripe = require('stripe')(process.env.STRIPE_STRIPE);
 
 // Middleware to check authentication
 function isLoggedIn(req, res, next) {
-    const token = req.cookies.token;
+    // const token = req.cookies.token;
+    const token = req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
+
     if (!token) {
         return res.status(401).send("You must be logged in!");
     }
@@ -72,16 +74,26 @@ router.get('/dashboard', isLoggedIn, (req,res)=>{
 })
 
 // fetching users paymentstatus
+// router.get("/user/me", isLoggedIn, async (req, res) => {
+//     try {
+//         const user = await User.findById(req.user.id); // Replace with the actual logic to fetch user details
+//         res.json({ paymentStatus: user.paymentStatus }); // Send payment status
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
+// Fetching user payment status
 router.get("/user/me", isLoggedIn, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id); // Replace with the actual logic to fetch user details
+        const user = await User.findById(req.user.id); // Fetch user from DB using the ID in the token
+        if (!user) return res.status(404).json({ error: "User not found" });
         res.json({ paymentStatus: user.paymentStatus }); // Send payment status
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
 
 router.post('/create-checkout-session', async (req, res) => {
     try {
