@@ -18,12 +18,23 @@ const app = express();
 //     credentials: true
 // }));    
 
-const cors = require('cors');
+
 
 app.use(cors({
-    origin: "https://grants-phi.vercel.app", // Replace with your frontend URL
-    credentials: true, // Allow cookies/sessions
+    origin: process.env.PRODUCTION_CLIENT_URL || 'http://localhost:3000', // Default to localhost if not set
+    credentials: true, // Allow credentials (cookies)
 }));
+app.options('*', cors({
+    origin: process.env.PRODUCTION_CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
+}));
+app.use((req, res, next) => {
+    console.log(`Request Method: ${req.method}`);
+    console.log(`Request URL: ${req.url}`);
+    console.log(`Origin: ${req.headers.origin}`);
+    next();
+});
+
 
 
 
