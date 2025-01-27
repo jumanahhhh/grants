@@ -16,7 +16,7 @@ app.use(cors({
         ? process.env.PRODUCTION_CLIENT_URL  // Add this to your production env
         : process.env.CORS_ORIGIN,
     credentials: true
-}));
+}));    
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
