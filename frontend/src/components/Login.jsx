@@ -111,19 +111,54 @@ const Login = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         // Step 1: Login request
+    //         const response = await axios.post(`/login`, formData, { withCredentials: true });
+    //         localStorage.setItem('token', response.data.token); // Save JWT
+
+    //         // Step 2: Check payment status
+    //         const userResponse = await axios.get('/user/me', { withCredentials: true });
+
+    //         // Handle response to check payment status
+    //         const paymentStatus = userResponse.data.paymentStatus;
+
+    //         if (paymentStatus) {
+    //             // If payment completed, navigate to dashboard
+    //             navigate('/dashboard');
+    //         } else {
+    //             // If payment not completed, navigate to payment page with email in the URL
+    //             navigate(`/payment?email=${formData.email}`);
+    //         }
+    //     } catch (error) {
+    //         // Error handling for login and user fetching
+    //         if (error.response?.status === 401) {
+    //             setMessage('Unauthorized. Please login again.');
+    //         } else {
+    //             setMessage(error.response?.data?.error || 'An error occurred');
+    //         }
+    //     }
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             // Step 1: Login request
             const response = await axios.post(`/login`, formData, { withCredentials: true });
             localStorage.setItem('token', response.data.token); // Save JWT
-
-            // Step 2: Check payment status
-            const userResponse = await axios.get('/user/me', { withCredentials: true });
-
+    
+            // Step 2: Get the JWT token from localStorage
+            const token = localStorage.getItem('token');
+    
+            // Step 3: Add token to headers for the /user/me request
+            const userResponse = await axios.get('/user/me', {
+                headers: { Authorization: `Bearer ${token}` }, // Send the token in the Authorization header
+                withCredentials: true
+            });
+    
             // Handle response to check payment status
             const paymentStatus = userResponse.data.paymentStatus;
-
+    
             if (paymentStatus) {
                 // If payment completed, navigate to dashboard
                 navigate('/dashboard');
@@ -140,7 +175,7 @@ const Login = () => {
             }
         }
     };
-
+    
     return (
         <div className="bg-gradient-to-br from-[#331D2C] to-[#3F2E3E] min-h-screen text-[#EFE1D1]">
             {/* Navbar */}

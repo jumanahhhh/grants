@@ -9,21 +9,46 @@ require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_STRIPE);
 
 // Middleware to check authentication
-function isLoggedIn(req, res, next) {
-    // const token = req.cookies.token;
-    const token = req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
+// function isLoggedIn(req, res, next) {
+//     // const token = req.cookies.token;
+//     const token = req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
 
+//     if (!token) {
+//         return res.status(401).send("You must be logged in!");
+//     }
+//     try {
+//         const data = jwt.verify(token, JWT_SECRET);
+//         req.user = data;
+//         next();
+//     } catch (err) {
+//         return res.status(401).send("Invalid or expired token. Please log in again.");
+//     }
+// }
+const isLoggedIn = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1]; // Get token from "Bearer <token>"
     if (!token) {
-        return res.status(401).send("You must be logged in!");
+        return res.status(401).json({ error: 'No token provided' });
     }
-    try {
-        const data = jwt.verify(token, JWT_SECRET);
-        req.user = data;
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+        req.user = decoded; // Attach decoded user data to the request
         next();
+    });
+};
+
+// Applying the middleware to your /user/me route
+router.get("/user/me", isLoggedIn, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id); // Use the decoded user ID from the token
+        res.json({ paymentStatus: user.paymentStatus });
     } catch (err) {
-        return res.status(401).send("Invalid or expired token. Please log in again.");
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-}
+});
 
 router.get("/", (req,res)=>{
     res.send("hey! please work /api");
