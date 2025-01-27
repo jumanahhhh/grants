@@ -24,7 +24,7 @@ function isLoggedIn(req, res, next) {
 }
 
 router.get("/", (req,res)=>{
-    res.send("hey");
+    res.send("hey! please work /api");
 })
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
