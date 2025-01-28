@@ -55,18 +55,11 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
         // Set token in the cookie
-        // res.cookie('token', token, {
-        //     httpOnly: true, // Makes the cookie inaccessible to JavaScript
-        //     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-        //     sameSite: 'strict', // Prevents CSRF attacks
-        // });
-
         res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', 
-            sameSite: 'none', // Ensure cookies work across different origins
+            httpOnly: true, // Makes the cookie inaccessible to JavaScript
+            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+            sameSite: 'strict', // Prevents CSRF attacks
         });
-        
 
         res.status(200).json({ message: 'Login successful', token });
     } catch (err) {
@@ -79,24 +72,24 @@ router.get('/dashboard', isLoggedIn, (req,res)=>{
 })
 
 // fetching users paymentstatus
-// router.get("/user/me", isLoggedIn, async (req, res) => {
-//     try {
-//         const user = await User.findById(req.user.id); // Replace with the actual logic to fetch user details
-//         res.json({ paymentStatus: user.paymentStatus }); // Send payment status
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
-router.get('/user/me', isLoggedIn, async (req, res) => {
+router.get("/user/me", isLoggedIn, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).send("User not found");
-        res.status(200).json({ email: user.email, paymentStatus: user.paymentStatus });
+        const user = await User.findById(req.user.id); // Replace with the actual logic to fetch user details
+        res.json({ paymentStatus: user.paymentStatus }); // Send payment status
     } catch (err) {
-        res.status(500).send("Server error");
+        console.error(err);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
+// router.get('/user/me', isLoggedIn, async (req, res) => {
+//     try {
+//         const user = await User.findById(req.user.id);
+//         if (!user) return res.status(404).send("User not found");
+//         res.status(200).json({ email: user.email, paymentStatus: user.paymentStatus });
+//     } catch (err) {
+//         res.status(500).send("Server error");
+//     }
+// });
 
 
 router.post('/create-checkout-session', async (req, res) => {
