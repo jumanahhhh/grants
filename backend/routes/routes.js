@@ -35,6 +35,7 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ message: 'User registered successfully' });
 });
 
+
 // Backend login route
 router.post('/login', async (req, res) => {
     // res.send("login!")
@@ -81,15 +82,6 @@ router.get("/user/me", isLoggedIn, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-// router.get('/user/me', isLoggedIn, async (req, res) => {
-//     try {
-//         const user = await User.findById(req.user.id);
-//         if (!user) return res.status(404).send("User not found");
-//         res.status(200).json({ email: user.email, paymentStatus: user.paymentStatus });
-//     } catch (err) {
-//         res.status(500).send("Server error");
-//     }
-// });
 
 
 router.post('/create-checkout-session', async (req, res) => {
